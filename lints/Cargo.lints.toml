@@ -1,0 +1,147 @@
+# Workspace lint table for the Rust Guidelines (GUIDELINES.md).
+#
+# Copy both tables into the root Cargo.toml of a workspace, then add this to
+# every member crate:
+#
+#     [lints]
+#     workspace = true
+#
+# Every lint name and group below was checked against the Clippy lint list
+# (https://rust-lang.github.io/rust-clippy/master/index.html) and against
+# `rustc -W help` / Clippy 1.98 (see VERIFICATION.md). The trailing comment
+# names the rule each lint implements and the lint's group.
+#
+# Two tiers:
+#   - Default tier (active): low noise, safe to adopt in an existing codebase.
+#   - Strict tier (commented): opt in per workspace, or per crate by copying a
+#     line into that crate's own `[lints]` table. Expect to add some
+#     `#[expect(..., reason = "...")]` attributes (FMT-05).
+#
+# Needs Cargo 1.74 or later (`[lints]` table).
+
+[workspace.lints.rust]
+# ---- Default tier ----
+unsafe_code = "deny"                      # UNS-01; crates that need unsafe use `#[expect(unsafe_code, reason = "...")]` on the module
+unsafe_op_in_unsafe_fn = "warn"           # UNS-04; warn by default from edition 2024
+missing_debug_implementations = "warn"    # TYP-06
+trivial_numeric_casts = "warn"            # NUM-01
+non_ascii_idents = "warn"                 # NAM-01
+redundant_imports = "warn"                # FMT-03
+redundant_lifetimes = "warn"              # FMT-03
+unused_lifetimes = "warn"                 # FMT-03
+ambiguous_negative_literals = "warn"      # FMT-03
+
+# ---- Strict tier (opt in) ----
+# unreachable_pub = "warn"                # MOD-01
+# missing_docs = "warn"                   # DOC-01; library crates
+
+[workspace.lints.clippy]
+# ---- Default tier: groups (Clippy's own defaults, stated explicitly) ----
+correctness = { level = "deny", priority = -1 }   # FMT-03
+suspicious = { level = "warn", priority = -1 }    # FMT-03
+complexity = { level = "warn", priority = -1 }    # FMT-03
+perf = { level = "warn", priority = -1 }          # FMT-03
+style = { level = "warn", priority = -1 }         # FMT-03
+
+# ---- Default tier: cherry-picked lints outside the default-on groups ----
+# restriction group
+allow_attributes_without_reason = "warn"  # FMT-05 (restriction)
+clone_on_ref_ptr = "warn"                 # OWN-04 (restriction)
+unwrap_used = "warn"                      # ERR-03 (restriction); tests allowed via clippy.toml
+map_err_ignore = "warn"                   # ERR-06 (restriction)
+unused_result_ok = "warn"                 # ERR-07 (restriction)
+todo = "warn"                             # ERR-12 (restriction)
+unimplemented = "warn"                    # ERR-12 (restriction)
+dbg_macro = "warn"                        # ERR-12 (restriction)
+undocumented_unsafe_blocks = "warn"       # UNS-02 (restriction)
+unnecessary_safety_comment = "warn"       # UNS-02 (restriction)
+unnecessary_safety_doc = "warn"           # UNS-03 (restriction)
+# pedantic group
+needless_for_each = "warn"                # FMT-06 (pedantic)
+wildcard_imports = "warn"                 # MOD-02, MOD-03 (pedantic)
+enum_glob_use = "warn"                    # MOD-03 (pedantic)
+fn_params_excessive_bools = "warn"        # TYP-03 (pedantic)
+struct_excessive_bools = "warn"           # TYP-03 (pedantic)
+expl_impl_clone_on_copy = "warn"          # TYP-08 (pedantic)
+ref_option = "warn"                       # OWN-01 (pedantic)
+unused_async = "warn"                     # CON-04 (pedantic)
+# cargo group
+wildcard_dependencies = "warn"            # DEP-02 (cargo)
+negative_feature_names = "warn"           # NAM-07 (cargo)
+redundant_feature_names = "warn"          # NAM-07 (cargo)
+
+# ---- Strict tier (opt in; uncomment what fits) ----
+# Option: enable the whole pedantic group instead of single pedantic lints,
+# then allow the ones that do not fit the codebase.
+# pedantic = { level = "warn", priority = -1 }    # FMT-04 (pedantic)
+#
+# Lint suppression and style
+# allow_attributes = "warn"               # FMT-05 (restriction)
+# string_add = "warn"                     # FMT-07 (restriction)
+# format_push_string = "warn"             # FMT-07 (pedantic)
+# module_name_repetitions = "warn"        # NAM-06 (restriction)
+# mod_module_files = "warn"               # MOD-04 (restriction); or self_named_module_files, not both
+# iter_without_into_iter = "warn"         # NAM-05 (pedantic); library crates
+# into_iter_without_iter = "warn"         # NAM-05 (pedantic); library crates
+#
+# Types, ownership
+# must_use_candidate = "warn"             # TYP-15 (pedantic)
+# return_self_not_must_use = "warn"       # TYP-15 (pedantic)
+# exhaustive_enums = "warn"               # TYP-14 (restriction); published crates only
+# exhaustive_structs = "warn"             # TYP-14 (restriction); published crates only
+# needless_pass_by_value = "warn"         # OWN-02 (pedantic)
+# implicit_clone = "warn"                 # OWN-03 (pedantic)
+# trivially_copy_pass_by_ref = "warn"     # OWN-06 (pedantic)
+# large_types_passed_by_value = "warn"    # OWN-06 (pedantic)
+#
+# Errors and panics
+# unwrap_in_result = "warn"               # ERR-03 (restriction)
+# panic_in_result_fn = "warn"             # ERR-03 (restriction)
+# expect_used = "warn"                    # ERR-04 (restriction); for crates that must not panic
+# missing_assert_message = "warn"         # ERR-05 (restriction)
+# let_underscore_must_use = "warn"        # ERR-07 (restriction)
+# print_stdout = "warn"                   # ERR-13 (restriction); expect it at the CLI output layer
+# print_stderr = "warn"                   # ERR-13 (restriction)
+#
+# Unsafe
+# multiple_unsafe_ops_per_block = "warn"  # UNS-02 (restriction)
+# ptr_as_ptr = "warn"                     # UNS-07 (pedantic)
+# as_pointer_underscore = "warn"          # UNS-07 (restriction)
+#
+# Concurrency
+# mutex_atomic = "warn"                   # CON-08 (restriction)
+# mutex_integer = "warn"                  # CON-08 (restriction)
+# future_not_send = "warn"                # CON-10 (nursery); expect false positives
+#
+# Arithmetic and conversions (enable per crate that handles external input)
+# cast_possible_truncation = "warn"       # NUM-01 (pedantic)
+# cast_sign_loss = "warn"                 # NUM-01 (pedantic)
+# cast_possible_wrap = "warn"             # NUM-01 (pedantic)
+# cast_precision_loss = "warn"            # NUM-01 (pedantic)
+# cast_lossless = "warn"                  # NUM-01 (pedantic)
+# checked_conversions = "warn"            # NUM-01 (pedantic)
+# arithmetic_side_effects = "warn"        # NUM-02 (restriction)
+# modulo_arithmetic = "warn"              # NUM-02 (restriction)
+# indexing_slicing = "warn"               # NUM-03 (restriction)
+# string_slice = "warn"                   # NUM-04 (restriction)
+# float_cmp = "warn"                      # NUM-05 (pedantic)
+#
+# Dependencies
+# multiple_crate_versions = "warn"        # DEP-07 (cargo)
+# cargo_common_metadata = "warn"          # DEP-10 (cargo); published crates only
+#
+# Documentation
+# too_long_first_doc_paragraph = "warn"   # DOC-02 (nursery)
+# missing_errors_doc = "warn"             # DOC-03 (pedantic)
+# missing_panics_doc = "warn"             # DOC-03 (pedantic)
+#
+# Testing
+# assertions_on_result_states = "warn"    # TST-06 (restriction)
+#
+# Performance
+# rc_buffer = "warn"                      # PRF-04 (restriction)
+# linkedlist = "warn"                     # PRF-04 (pedantic)
+# stable_sort_primitive = "warn"          # PRF-04 (pedantic)
+# large_stack_arrays = "warn"             # PRF-06 (pedantic)
+# large_futures = "warn"                  # PRF-06 (pedantic)
+# inline_always = "warn"                  # PRF-07 (pedantic)

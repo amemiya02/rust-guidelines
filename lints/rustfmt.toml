@@ -1,0 +1,29 @@
+# rustfmt configuration for the Rust Guidelines (FMT-01, FMT-02).
+# Put this file next to the workspace root Cargo.toml.
+# Options and stability checked against
+# https://github.com/rust-lang/rustfmt/blob/main/Configurations.md (see VERIFICATION.md).
+# Everything not listed keeps its rustfmt default: 100 columns, 4-space
+# indent, no hard tabs, sorted imports.
+
+# Stable. Match the crates' edition. `cargo fmt` infers it from Cargo.toml,
+# but plain `rustfmt` defaults to "2015"; setting it keeps both the same.
+style_edition = "2024"
+
+# Stable. Only needed when you run `rustfmt` directly on files
+# (`cargo fmt` passes the edition from Cargo.toml).
+# edition = "2024"
+
+# ---- Optional stable settings (uncomment per project) ----
+# use_field_init_shorthand = true   # write `Foo { x }`, not `Foo { x: x }`
+# use_try_shorthand = true          # rewrite `try!(x)` as `x?`
+
+# ---- Unstable settings: NOT applied by stable rustfmt ----
+# They need a nightly rustfmt; stable rustfmt warns and ignores them.
+# Use them only if every contributor and CI run formats with nightly.
+# hex_literal_case = "Lower"            # unstable in rustfmt 1.9.0 (Rust 1.98), although the main-branch docs list it as stable
+# imports_granularity = "Module"        # unstable
+# group_imports = "StdExternalCrate"    # unstable
+# wrap_comments = true                  # unstable
+# comment_width = 100                   # unstable
+# format_code_in_doc_comments = true    # unstable
+# normalize_comments = true             # unstable

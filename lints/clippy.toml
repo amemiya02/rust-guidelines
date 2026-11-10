@@ -1,0 +1,40 @@
+# Clippy configuration for the Rust Guidelines (GUIDELINES.md).
+# Put this file next to the workspace root Cargo.toml.
+# Every key below is listed in https://doc.rust-lang.org/clippy/lint_configuration.html
+# and was accepted by Clippy 1.98 (see VERIFICATION.md). Clippy has no
+# unstable configuration keys; the commented keys are project-specific examples.
+
+# ERR-03: `unwrap` is fine in tests (#[test] functions and #[cfg(test)] code).
+allow-unwrap-in-tests = true
+# ERR-04 (strict tier `expect_used`): the same for `expect`.
+allow-expect-in-tests = true
+# ERR-13 (strict tier `print_stdout`/`print_stderr`): tests may print.
+allow-print-in-tests = true
+# NUM-03 (strict tier `indexing_slicing`): tests may index directly.
+allow-indexing-slicing-in-tests = true
+# MOD-02 (optional): also flag `pub use module::*` re-exports and prelude globs.
+# This also flags `use super::*` in test modules, which MOD-03 allows, so it
+# is off here; turn it on in library crates that want the stricter check.
+# warn-on-all-wildcard-imports = true
+
+# DEP-08: Clippy reads the MSRV from `rust-version` in Cargo.toml.
+# Set it here only if the manifest does not have one.
+# msrv = "1.85"
+
+# CON-02: block blocking calls in async crates. Paths must exist, or Clippy
+# reports an error; adjust the list to the project's runtime and libraries.
+# disallowed-methods = [
+#     { path = "std::thread::sleep", reason = "blocks the async executor; use the runtime's sleep" },
+#     { path = "std::fs::read_to_string", reason = "blocking I/O; use the runtime's fs API or a blocking pool" },
+#     { path = "std::fs::write", reason = "blocking I/O; use the runtime's fs API or a blocking pool" },
+# ]
+
+# CON-01: also forbid project-specific guard types across `.await`.
+# await-holding-invalid-types = [
+#     { path = "std::sync::MutexGuard", reason = "release the lock before awaiting" },
+# ]
+
+# CON-09: ban types the project has replaced.
+# disallowed-types = [
+#     { path = "std::collections::LinkedList", reason = "PRF-04: use Vec or VecDeque" },
+# ]
